@@ -295,7 +295,7 @@ class HtmlNode
 				} else {
 					$charset = DEFAULT_TARGET_CHARSET;
 				}
-				$ret .= htmlentities($this->_[self::HDOM_INFO_INNER], ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+				$ret .= $this->_[self::HDOM_INFO_INNER];
 			}
 		}
 
@@ -478,7 +478,7 @@ class HtmlNode
 				. '='
 				. (isset($this->_[self::HDOM_INFO_SPACE][$key]) ? $this->_[self::HDOM_INFO_SPACE][$key][2] : '')
 				. $quote
-				. htmlentities($val, ENT_COMPAT, $this->dom->target_charset)
+				. $val
 				. $quote;
 			}
 		}

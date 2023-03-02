@@ -266,11 +266,7 @@ class HtmlDocument
 
 					$node = new HtmlNode($this);
 					++$this->cursor;
-					$node->_[HtmlNode::HDOM_INFO_TEXT] = html_entity_decode(
-						$this->restore_noise($content),
-						ENT_QUOTES | ENT_HTML5,
-						$this->_target_charset
-					);
+					$node->_[HtmlNode::HDOM_INFO_TEXT] = $this->restore_noise($content);
 					$this->link_nodes($node, false);
 
 				}
@@ -789,11 +785,7 @@ class HtmlDocument
 			}
 
 			if ($innertext !== '') {
-				$node->_[HtmlNode::HDOM_INFO_INNER] = html_entity_decode(
-					$this->restore_noise($innertext),
-					ENT_QUOTES | ENT_HTML5,
-					$this->_target_charset
-				);
+				$node->_[HtmlNode::HDOM_INFO_INNER] = $this->restore_noise($innertext);
 			}
 
 			$this->parent = $node;
@@ -846,11 +838,7 @@ class HtmlDocument
 			if ($quote_type !== HtmlNode::HDOM_QUOTE_DOUBLE) {
 				$node->_[HtmlNode::HDOM_INFO_QUOTE][$name] = $quote_type;
 			}
-			$node->attr[$name] = html_entity_decode(
-				$value,
-				ENT_QUOTES | ENT_HTML5,
-				$this->_target_charset
-			);
+			$node->attr[$name] = $value;
 		}
 	}
 
