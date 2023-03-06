@@ -91,7 +91,8 @@ function file_get_html(
 	$target_charset = DEFAULT_TARGET_CHARSET,
 	$stripRN = true,
 	$defaultBRText = DEFAULT_BR_TEXT,
-	$defaultSpanText = DEFAULT_SPAN_TEXT)
+	$defaultSpanText = DEFAULT_SPAN_TEXT,
+	$enable_htmlentity_operations = true)
 {
 	if($maxLen <= 0) { $maxLen = MAX_FILE_SIZE; }
 
@@ -102,7 +103,9 @@ function file_get_html(
 		$target_charset,
 		$stripRN,
 		$defaultBRText,
-		$defaultSpanText
+		$defaultSpanText,
+		0,
+		$enable_htmlentity_operations
 	);
 
 	$contents = file_get_contents(
@@ -128,7 +131,8 @@ function str_get_html(
 	$target_charset = DEFAULT_TARGET_CHARSET,
 	$stripRN = true,
 	$defaultBRText = DEFAULT_BR_TEXT,
-	$defaultSpanText = DEFAULT_SPAN_TEXT)
+	$defaultSpanText = DEFAULT_SPAN_TEXT,
+	$enable_htmlentity_operations = true)
 {
 	$dom = new simple_html_dom(
 		null,
@@ -137,7 +141,9 @@ function str_get_html(
 		$target_charset,
 		$stripRN,
 		$defaultBRText,
-		$defaultSpanText
+		$defaultSpanText,
+		0,
+		$enable_htmlentity_operations
 	);
 
 	if (empty($str) || strlen($str) > MAX_FILE_SIZE) {

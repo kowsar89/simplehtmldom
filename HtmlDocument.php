@@ -34,6 +34,7 @@ class HtmlDocument
 	public $lowercase = false;
 	public $original_size;
 	public $size;
+	public $enable_htmlentity_operations;
 
 	protected $pos;
 	protected $doc;
@@ -113,8 +114,11 @@ class HtmlDocument
 		$stripRN = true,
 		$defaultBRText = DEFAULT_BR_TEXT,
 		$defaultSpanText = DEFAULT_SPAN_TEXT,
-		$options = 0)
+		$options = 0,
+		$enable_htmlentity_operations = true)
 	{
+		$this->enable_htmlentity_operations = $enable_htmlentity_operations;
+
 		if ($str) {
 			if (preg_match('/^http:\/\//i', $str) || strlen($str) <= PHP_MAXPATHLEN && is_file($str)) {
 				$this->loadFile($str);
@@ -266,11 +270,17 @@ class HtmlDocument
 
 					$node = new HtmlNode($this);
 					++$this->cursor;
-					$node->_[HtmlNode::HDOM_INFO_TEXT] = html_entity_decode(
-						$this->restore_noise($content),
-						ENT_QUOTES | ENT_HTML5,
-						$this->_target_charset
-					);
+
+					if ($this->enable_htmlentity_operations) {
+						$node->_[HtmlNode::HDOM_INFO_TEXT] = html_entity_decode(
+							$this->restore_noise($content),
+							ENT_QUOTES | ENT_HTML5,
+							$this->_target_charset
+						);
+					} else {
+						$node->_[HtmlNode::HDOM_INFO_TEXT] = $this->restore_noise($content);
+					}
+
 					$this->link_nodes($node, false);
 
 				}
@@ -789,11 +799,15 @@ class HtmlDocument
 			}
 
 			if ($innertext !== '') {
-				$node->_[HtmlNode::HDOM_INFO_INNER] = html_entity_decode(
-					$this->restore_noise($innertext),
-					ENT_QUOTES | ENT_HTML5,
-					$this->_target_charset
-				);
+				if ($this->enable_htmlentity_operations) {
+					$node->_[HtmlNode::HDOM_INFO_INNER] = html_entity_decode(
+						$this->restore_noise($innertext),
+						ENT_QUOTES | ENT_HTML5,
+						$this->_target_charset
+					);
+				} else {
+					$node->_[HtmlNode::HDOM_INFO_INNER] = $this->restore_noise($innertext);
+				}
 			}
 
 			$this->parent = $node;
@@ -846,11 +860,15 @@ class HtmlDocument
 			if ($quote_type !== HtmlNode::HDOM_QUOTE_DOUBLE) {
 				$node->_[HtmlNode::HDOM_INFO_QUOTE][$name] = $quote_type;
 			}
-			$node->attr[$name] = html_entity_decode(
-				$value,
-				ENT_QUOTES | ENT_HTML5,
-				$this->_target_charset
-			);
+			if ($this->enable_htmlentity_operations) {
+				$node->attr[$name] = html_entity_decode(
+					$value,
+					ENT_QUOTES | ENT_HTML5,
+					$this->_target_charset
+				);
+			} else {
+				$node->attr[$name] = $value;
+			}
 		}
 	}
 

@@ -295,7 +295,11 @@ class HtmlNode
 				} else {
 					$charset = DEFAULT_TARGET_CHARSET;
 				}
-				$ret .= htmlentities($this->_[self::HDOM_INFO_INNER], ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+				if ($this->dom->enable_htmlentity_operations) {
+					$ret .= htmlentities($this->_[self::HDOM_INFO_INNER], ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+				} else {
+					$ret .= $this->_[self::HDOM_INFO_INNER];
+				}
 			}
 		}
 
@@ -473,12 +477,16 @@ class HtmlNode
 						$quote = '"';
 				}
 
+				if ($this->dom->enable_htmlentity_operations) {
+					$val = htmlentities($val, ENT_COMPAT, $this->dom->target_charset);
+				}
+
 				$ret .= $key
 				. (isset($this->_[self::HDOM_INFO_SPACE][$key]) ? $this->_[self::HDOM_INFO_SPACE][$key][1] : '')
 				. '='
 				. (isset($this->_[self::HDOM_INFO_SPACE][$key]) ? $this->_[self::HDOM_INFO_SPACE][$key][2] : '')
 				. $quote
-				. htmlentities($val, ENT_COMPAT, $this->dom->target_charset)
+				. $val
 				. $quote;
 			}
 		}
